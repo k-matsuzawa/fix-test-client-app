@@ -1,0 +1,6 @@
+[workspace]
+members = [
+    "rust-packages/common-lib",
+    "rust-packages/fix-api-lib",
+    "src-tauri"
+]

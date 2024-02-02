@@ -1,0 +1,32 @@
+[package]
+name = "fix-test-client-app"
+version = "0.0.1"
+description = "A Tauri App"
+authors = ["anonymous"]
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/k-matsuzawa/fix-test-client-app/tree/main/src-tauri"
+edition = "2021"
+rust-version = "1.70"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[build-dependencies]
+tauri-build = { version = "^1.4", features = [] }
+
+[dependencies]
+common-lib = { path = "../rust-packages/common-lib" }
+fix-api-lib = { path = "../rust-packages/fix-api-lib" }
+openssl-sys = {version = "0.9", features = ["vendored"] }
+log = "^0.4"
+serde_json = "~1.0"
+serde = { version = "~1.0", features = ["derive"] }
+tauri = { version = "^1.4", features = ["api-all"] }
+tauri-plugin-log = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v1" }
+
+[features]
+# by default Tauri runs in production mode
+# when `tauri dev` runs it is executed with `cargo run --no-default-features` if `devPath` is an URL
+default = ["custom-protocol"]
+# this feature is used used for production builds where `devPath` points to the filesystem
+# DO NOT remove this
+custom-protocol = ["tauri/custom-protocol"]

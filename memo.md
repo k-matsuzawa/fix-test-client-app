@@ -1,0 +1,71 @@
+# memo
+
+- FIX
+  - 共通
+    - TargetCompID、SubIDも指定できるようにする。（内部固定だと、OSSとしては、ね。）
+  - MarketDataRequest
+    - MDReqID: 任意ID
+    - SubscriptionRequestType: 1（SNAPSHOT_PLUS_UPDATES）固定。見てない
+    - MarketDepth: 0固定
+    - MDUpdateType?: 0（FULL_REFRESH）固定
+    - NoMDEntryTypes[]: MDEntryTypeに0と1を指定（配列2個）
+      - MDEntryType: offer/bid
+    - NoRelatedSym[]
+      - Symbol: シンボル（JPY_BTC等）
+      - SecurityExchange: 対象のLPのLegalEntityID（BTSEなど）
+  - MarketDataSnapshotFullRefresh
+    - MDReqID?: request値
+    - Symbol: シンボル（NoRelatedSymの値）
+    - SecurityExchange: NoRelatedSymの値
+    - NoMDEntries[]
+      - MDEntryType: offer/bid
+      - MDEntryPx?: price
+      - MDEntrySize?: qty
+      - QuoteEntryID?: QuoteID
+  - NewOrderSingle
+    - ClOrderID: 任意ID
+    - Account?: 任意
+      - 入力欄を設けても良さそう。★★★★
+    - QuoteID?: QuoteEntryID(あれば)
+    - SecurityExchange: 対象のLPのLegalEntityID（BTSEなど）
+    - Symbol: シンボル
+    - Side: buy/sell
+    - OrderQty?: qty
+    - OrdType: LIMIT,PREVIOUSLY_QUOTEDのどちらか（LPにより異なる）★★★★
+      - 任意指定か、LPにより指定できるようにしないとダメそう。
+      - 設定ファイルでLP毎に指定もアリかも。
+        - ログイン画面で設定で良いかも。
+    - Price?: price
+    - TimeInForce?: LPにより異なる★★★★
+      - 任意指定か、LPにより指定できるようにしないとダメそう。
+      - 設定ファイルでLP毎に指定もアリかも。
+        - ログイン画面で設定で良いかも。
+    - TransactTime: UTC時刻
+  - ExecutionReport (response)
+    - OrderID: 任意値
+    - ClOrderID: NewOrderSingleの値
+    - ExecType:
+      - 0 = New
+      - 4 = Canceled
+      - 8 = Rejected
+      - A = Pending New
+      - F = Trade (partial fill or fill)
+    - OrdStatus
+      - 0 = New
+      - 1 = Partially filled
+      - 2 = filled
+      - 4 = Canceled
+      - 8 = Rejected
+      - A = Pending New
+    - その他省略
+    - Text: メッセージ。エラー時など？
+- 必要なこと
+  - ログイン時
+    - sender, receiver共に記載
+    - 対象のLPを記載。なお複数LPに対して行いたい場合はSubID増やしてほしい。（手間がかかるので現状は複数LP対応を除外したい）
+  - price一覧（発注込み）
+    - Rust側で、MarketDataSnapshotFullRefreshの情報を保持。frontendからの要求（1秒単位で取得）に応じて最新情報を返す。
+      - frontendは動的Updateの方法を考えるのが良さそう。
+        - 自動更新じゃなくて、手動更新でも良いかも。（急にリスト内容が変わるのを防ぐため）
+        - なお30秒未操作であれば自動で更新するのは良さそう。
+    - 発注後、グレーアウトさせる。（発注したIDもしくはPrice等は記憶）

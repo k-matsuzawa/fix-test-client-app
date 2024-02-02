@@ -1,0 +1,85 @@
+{
+  "build": {
+    "beforeDevCommand": "pnpm dev",
+    "beforeBuildCommand": "pnpm build",
+    "devPath": "http://localhost:1420",
+    "distDir": "../dist",
+    "withGlobalTauri": false
+  },
+  "package": {
+    "productName": "fix-test-client-app",
+    "version": "0.0.1"
+  },
+  "tauri": {
+    "allowlist": {
+      "all": true,
+      "fs": {
+        "scope": [
+          "$RESOURCE/*"
+        ]
+      },
+      "shell": {
+        "all": false,
+        "open": true
+      }
+    },
+    "bundle": {
+      "active": true,
+      "category": "Finance",
+      "copyright": "copyright 2024",
+      "deb": {
+        "depends": []
+      },
+      "externalBin": [],
+      "icon": [
+        "icons/32x32.png",
+        "icons/128x128.png",
+        "icons/128x128@2x.png",
+        "icons/icon.icns",
+        "icons/icon.ico"
+      ],
+      "identifier": "fix-test-client-app",
+      "longDescription": "FIX test client app.",
+      "macOS": {
+        "entitlements": null,
+        "exceptionDomain": "",
+        "frameworks": [],
+        "providerShortName": null,
+        "signingIdentity": null
+      },
+      "publisher": "anonymous",
+      "resources": [
+      ],
+      "shortDescription": "FIX test client app.",
+      "targets": "all",
+      "windows": {
+        "certificateThumbprint": null,
+        "digestAlgorithm": "sha256",
+        "timestampUrl": "",
+        "webviewInstallMode": {
+          "type": "offlineInstaller"
+        },
+        "wix": {
+          "language": ["ja-JP"]
+        }
+      }
+    },
+    "security": {
+      "csp": null
+    },
+    "updater": {
+      "active": false
+    },
+    "windows": [
+      {
+        "fullscreen": false,
+        "height": 760,
+        "minHeight": 760,
+        "minWidth": 900,
+        "resizable": true,
+        "title": "fix-test-client-app",
+        "width": 1000
+      }
+    ]
+  }
+}
